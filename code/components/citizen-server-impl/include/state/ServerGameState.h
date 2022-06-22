@@ -1058,10 +1058,16 @@ struct GameStateClientData : public sync::ClientSyncDataBase
 	uint32_t routingBucket = 0;
 
 	float playerCullingRadius = 0.0f;
+	float playerMaxWorldGridSize = 0.0f;
 	
 	inline float GetPlayerCullingRadius()
 	{
 		return playerCullingRadius;
+	}
+
+	inline float GetPlayerMaxWorldGridSize()
+	{
+		return playerMaxWorldGridSize;
 	}
 
 	GameStateClientData()

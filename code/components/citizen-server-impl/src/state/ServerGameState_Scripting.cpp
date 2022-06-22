@@ -1535,6 +1535,31 @@ static void Init()
 		return true;
 	}));
 
+	fx::ScriptEngine::RegisterNativeHandler("SET_PLAYER_MAX_WORLD_GRID_SIZE", MakeClientFunction([](fx::ScriptContext& context, const fx::ClientSharedPtr& client)
+	{
+		if (context.GetArgumentCount() > 1)
+		{
+			float playerMaxWorldGridSize = context.GetArgument<float>(1);
+
+			if (playerMaxWorldGridSize >= 0)
+			{
+				// get the current resource manager
+				auto resourceManager = fx::ResourceManager::GetCurrent();
+
+				// get the owning server instance
+				auto instance = resourceManager->GetComponent<fx::ServerInstanceBaseRef>()->Get();
+
+				// get the server's game state
+				auto gameState = instance->GetComponent<fx::ServerGameState>();
+
+				auto [lock, clientData] = gameState->ExternalGetClientData(client);
+				clientData->playerMaxWorldGridSize = playerMaxWorldGridSize;
+			}
+		}
+
+		return true;
+	}));
+
 	fx::ScriptEngine::RegisterNativeHandler("GET_LANDING_GEAR_STATE", makeEntityFunction([](fx::ScriptContext& context, const fx::sync::SyncEntityPtr& entity)
 	{
 		int gearState = 0;

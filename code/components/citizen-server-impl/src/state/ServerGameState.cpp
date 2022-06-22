@@ -2274,11 +2274,13 @@ void ServerGameState::UpdateWorldGrid(fx::ServerInstanceBase* instance)
 
 		// only set world grid for the most focused position
 		const auto& pos = posns[0];
+		float playerMaxWorldGridSize = data->GetPlayerMaxWorldGridSize();
+		float gridSize = playerMaxWorldGridSize > 0.0f ? playerMaxWorldGridSize/2 : 299.0f;
 
-		int minSectorX = std::max((pos.x - 299.0f) + 8192.0f, 0.0f) / 150;
-		int maxSectorX = std::max((pos.x + 299.0f) + 8192.0f, 0.0f) / 150;
-		int minSectorY = std::max((pos.y - 299.0f) + 8192.0f, 0.0f) / 150;
-		int maxSectorY = std::max((pos.y + 299.0f) + 8192.0f, 0.0f) / 150;
+		int minSectorX = std::max((pos.x - gridSize) + 8192.0f, 0.0f) / 150;
+		int maxSectorX = std::max((pos.x + gridSize) + 8192.0f, 0.0f) / 150;
+		int minSectorY = std::max((pos.y - gridSize) + 8192.0f, 0.0f) / 150;
+		int maxSectorY = std::max((pos.y + gridSize) + 8192.0f, 0.0f) / 150;
 
 		decltype(m_worldGrids)::iterator gridRef;
 
