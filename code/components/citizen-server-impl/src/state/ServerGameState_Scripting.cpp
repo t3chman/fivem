@@ -1541,7 +1541,7 @@ static void Init()
 		{
 			float playerMaxWorldGridSize = context.GetArgument<float>(1);
 
-			if (playerMaxWorldGridSize >= 0)
+			if (playerMaxWorldGridSize >= 0.0f)
 			{
 				// get the current resource manager
 				auto resourceManager = fx::ResourceManager::GetCurrent();
