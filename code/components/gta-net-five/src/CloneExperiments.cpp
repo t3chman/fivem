@@ -4199,6 +4199,8 @@ extern void* origin;
 extern float* (*getCoordsFromOrigin)(void*, float*);
 }
 
+float clientCullingRadius = 424.0f;
+
 bool DoesLocalPlayerOwnWorldGrid(float* pos)
 {
 	if (!icgi->OneSyncEnabled)
@@ -4213,7 +4215,7 @@ bool DoesLocalPlayerOwnWorldGrid(float* pos)
 	float dY = pos[1] - centerOfWorld[1];
 
 	// #TODO1S: make server able to send current range for player (and a world grid granularity?)
-	constexpr float maxRange = (424.0f * 424.0f);
+	float maxRange = (clientCullingRadius * clientCullingRadius);
 
 	if (icgi->NetProtoVersion < 0x202007021121)
 	{
@@ -4501,6 +4503,23 @@ static InitFunction initFunction([]()
 
 		auto owner = netObject__GetPlayerOwner(netObj);
 		context.SetResult<int>(owner ? owner->physicalPlayerIndex() : 0xFF);
+	});
+
+	fx::ScriptEngine::RegisterNativeHandler("SET_CLIENT_CULLING_RADIUS", [](fx::ScriptContext& context)
+	{
+		float cullingRadius = context.GetArgument<float>(0);
+
+		if (!cullingRadius)
+		{
+			return;
+		}
+
+		if (cullingRadius <= 0.0f)
+		{
+			cullingRadius = 424.0f;
+		}
+
+		clientCullingRadius = cullingRadius;
 	});
 
 #ifdef ONESYNC_CLONING_NATIVES
